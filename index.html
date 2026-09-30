@@ -1,0 +1,817 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<!-- partage -->
+<meta name="description" content="Portfolio de Giovani Labat, designer UX/UI et chef de projet digital : Bell & Ross, extranet SAV, Connect Station.">
+<link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Giovani Labat — Designer UX/UI">
+<meta property="og:description" content="Portfolio de Giovani Labat, designer UX/UI et chef de projet digital : Bell & Ross, extranet SAV, Connect Station.">
+<meta property="og:url" content="https://giovanilabat.github.io/">
+<meta property="og:image" content="https://giovanilabat.github.io/assets/og-image.jpg">
+<meta name="twitter:card" content="summary_large_image">
+<!-- /partage -->
+<title>Giovani Labat — Designer UX/UI</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600;700&family=Geist+Mono:wght@500;600&family=Newsreader:ital,opsz,wght@0,6..72,200;0,6..72,300;0,6..72,400;1,6..72,200;1,6..72,300&display=swap">
+<style>
+  :root{
+    color-scheme:light dark;
+    --bg:#FAFAFA;
+    --ink:#09090B;
+    --muted:#52525B;
+    --faint:#71717A;
+    --nav-bg:rgba(244,244,245,0.55);
+    --nav-brd:rgba(0,0,0,0.06);
+    --nav-ink:#27272A;
+    --accent:#FDCF00;
+    --pill-ink:#18181B;
+    --shadow:0 10px 30px rgba(24,24,27,0.06);
+    /* cards */
+    --card-bg:#FFFFFF;
+    --card-canvas:#F1F3F6;
+    --card-brd:rgba(9,9,11,0.08);
+    /* pill palette */
+    --p-pink:#FBCFE8;
+    --p-gray:#F4F4F5;
+    --p-yellow:#FDCF00;
+    --p-orange:#FF894A;
+    --p-purple:#D9C9FF;
+    --p-green:#5ADBA5;
+    --p-lime:#D9F99D;
+    --p-blue:#A3D9FF;
+    --p-white:#FFFFFF;
+  }
+  @media (prefers-color-scheme: dark){
+    :root:not([data-theme="light"]){
+      --bg:#0A0A0B;
+      --ink:#FAFAFA;
+      --muted:#A1A1AA;
+      --faint:#8B8B93;
+      --nav-bg:rgba(39,39,42,0.55);
+      --nav-brd:rgba(255,255,255,0.08);
+      --nav-ink:#E4E4E7;
+      --shadow:0 10px 30px rgba(0,0,0,0.4);
+      --card-bg:#141418;
+      --card-canvas:#1D1D22;
+      --card-brd:rgba(255,255,255,0.09);
+    }
+  }
+  :root[data-theme="dark"]{
+    --bg:#0A0A0B;
+    --ink:#FAFAFA;
+    --muted:#A1A1AA;
+    --faint:#8B8B93;
+    --nav-bg:rgba(39,39,42,0.55);
+    --nav-brd:rgba(255,255,255,0.08);
+    --nav-ink:#E4E4E7;
+    --shadow:0 10px 30px rgba(0,0,0,0.4);
+    --card-bg:#141418;
+    --card-canvas:#1D1D22;
+    --card-brd:rgba(255,255,255,0.09);
+  }
+
+  *{box-sizing:border-box}
+  img{max-width:100%}
+  [hidden]{display:none!important}
+  body{
+    margin:0;
+    background:var(--bg);
+    color:var(--ink);
+    font-family:"Geist","Geist Placeholder",system-ui,-apple-system,sans-serif;
+    -webkit-font-smoothing:antialiased;
+    overflow-x:hidden;
+  }
+
+  .hero{
+    position:sticky;
+    top:0;
+    z-index:1;
+    height:100dvh;
+    min-height:600px;
+    width:100%;
+    overflow:hidden;
+  }
+
+  /* ---------- Physics stage (pills live here) ---------- */
+  #stage{
+    position:absolute;
+    inset:0;
+    z-index:1;
+    overflow:hidden;
+    touch-action:pan-y;
+  }
+  .pill{
+    position:absolute;
+    left:0;top:0;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    gap:10px;
+    font-family:"Geist Mono","SFMono-Regular",ui-monospace,monospace;
+    font-weight:400;
+    font-size:18px;
+    line-height:18px;
+    letter-spacing:0;
+    text-transform:uppercase;
+    color:var(--pill-ink);
+    white-space:nowrap;
+    will-change:transform;
+    transform-origin:center center;
+    cursor:grab;
+    user-select:none;
+    -webkit-user-select:none;
+  }
+  .pill.dragging{cursor:grabbing}
+  .pill.circle{padding:0}
+  .pill svg{display:block;flex:none}
+
+  /* ---------- Foreground content ---------- */
+  .content{
+    position:relative;
+    z-index:2;
+    height:100%;
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    justify-content:center;
+    text-align:center;
+    padding:0 20px;
+    pointer-events:none;
+  }
+  .content a{pointer-events:auto}
+
+  .hello{
+    display:inline-flex;
+    align-items:center;
+    gap:9px;
+    font-size:16px;
+    color:var(--faint);
+    margin-bottom:22px;
+  }
+  .hello .avatar{
+    width:36px;height:36px;border-radius:50%;
+    object-fit:cover;flex:none;display:block;
+    box-shadow:0 0 0 1px rgba(0,0,0,0.06);
+  }
+
+  h1.title{
+    font-family:"Newsreader","PP Editorial New",Georgia,"Times New Roman",serif;
+    font-weight:200;
+    font-size:clamp(32px, calc(15px + 2.6vw), 66px);
+    line-height:1.18;
+    letter-spacing:-0.01em;
+    color:var(--ink);
+    margin:0;
+    max-width:16ch;
+    text-wrap:balance;
+  }
+  h1.title em{font-style:italic}
+
+  .subtitle{
+    margin:26px 0 0;
+    font-size:clamp(15px,1.4vw,17px);
+    line-height:1.6;
+    color:var(--muted);
+    max-width:42ch;
+  }
+  .subtitle b{color:var(--ink);font-weight:600}
+
+  /* ---------- Nav ---------- */
+  .nav-wrap{
+    position:absolute;
+    top:calc(18px + env(safe-area-inset-top,0px));
+    left:0;right:0;
+    z-index:5;
+    display:flex;
+    justify-content:center;
+    padding:0 16px;
+    pointer-events:none;
+  }
+  .nav{
+    display:flex;
+    align-items:center;
+    gap:8px;
+    pointer-events:auto;
+  }
+  .logo{
+    width:56px;height:56px;border-radius:50%;
+    background:var(--nav-bg);
+    backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);
+    border:1px solid var(--nav-brd);
+    display:flex;align-items:center;justify-content:center;
+    font-weight:600;font-size:15px;color:var(--nav-ink);
+    letter-spacing:0.02em;
+    box-shadow:var(--shadow);
+    text-decoration:none;
+  }
+  .nav-links{
+    display:flex;align-items:center;gap:4px;
+    background:var(--nav-bg);
+    backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);
+    border:1px solid var(--nav-brd);
+    border-radius:28px;
+    padding:8px;
+    box-shadow:var(--shadow);
+  }
+  .nav-links a{
+    display:inline-flex;align-items:center;gap:7px;
+    padding:9px 15px;
+    border-radius:20px;
+    font-size:15px;font-weight:500;
+    color:var(--nav-ink);
+    text-decoration:none;
+    transition:background .18s ease, transform .18s ease;
+  }
+  .nav-links a:hover{background:rgba(0,0,0,0.05)}
+  .nav-links a svg{opacity:.85}
+  .mail{
+    width:56px;height:56px;border-radius:50%;
+    background:var(--accent);
+    display:flex;align-items:center;justify-content:center;
+    box-shadow:0 6px 18px rgba(253,207,0,0.4);
+    text-decoration:none;
+    transition:transform .18s ease;
+  }
+  .mail:hover{transform:translateY(-2px)}
+
+  /* ---------- Theme toggle ---------- */
+  .tgl{ border:0; padding:0; cursor:pointer; font:inherit; }
+  .tgl svg{display:none}
+  .tgl .moon{display:block}
+  @media (prefers-color-scheme:dark){
+    :root:not([data-theme="light"]) .tgl .sun{display:block}
+    :root:not([data-theme="light"]) .tgl .moon{display:none}
+  }
+  :root[data-theme="dark"] .tgl .sun{display:block}
+  :root[data-theme="dark"] .tgl .moon{display:none}
+  :root[data-theme="light"] .tgl .moon{display:block}
+  :root[data-theme="light"] .tgl .sun{display:none}
+
+  /* ---------- Bottom divider ---------- */
+  .divider{
+    position:absolute;
+    left:0;right:0;
+    bottom:calc(20px + env(safe-area-inset-bottom,0px));
+    z-index:3;
+    display:flex;align-items:center;justify-content:center;
+    gap:10px;
+    font-family:"Geist Mono",ui-monospace,monospace;
+    font-size:12px;letter-spacing:0.14em;
+    text-transform:uppercase;
+    color:var(--faint);
+    pointer-events:none;
+  }
+
+  /* ---------- Projects (sticky stack) ---------- */
+  .reel{ position:relative; }   /* borne le sticky du héro : il se libère après les projets */
+  .projects{ position:relative; z-index:4; }
+  .project-card{
+    --cx:64px;
+    position:sticky; top:0;
+    min-height:100vh;
+    display:flex; flex-direction:column;
+    padding:52px var(--cx) 80px;
+    background:var(--card-bg);
+    border-radius:48px 48px 0 0;
+    box-shadow:0 -18px 50px rgba(9,9,11,0.08);
+    overflow:hidden;
+  }
+  .pc-head{ display:flex; align-items:flex-start; justify-content:space-between; gap:20px; }
+  .pc-meta{ display:flex; align-items:center; gap:8px; }
+  .pc-icon{
+    width:32px;height:32px;border-radius:10px;flex:none;
+    display:flex;align-items:center;justify-content:center;
+  }
+  .pc-icon svg{ width:17px; height:17px; }
+  .pc-label{ font-size:15px; color:var(--faint); font-weight:400; }
+  .pc-cta{
+    display:inline-flex;align-items:center;gap:8px;
+    padding:12px 24px;border-radius:100px;
+    background:var(--ink); color:var(--bg);
+    font-size:15px;font-weight:500;text-decoration:none;white-space:nowrap;
+    transition:transform .18s ease, opacity .18s ease;
+  }
+  .pc-cta:hover{ transform:translateX(2px); opacity:.9; }
+  .pc-title{
+    margin:12px 0 0; max-width:60ch;
+    font-size:clamp(22px,2.2vw,30px);
+    font-weight:600; line-height:1.1; letter-spacing:-0.01em;
+    color:var(--ink); text-wrap:balance;
+  }
+  .pc-tags{
+    margin:9px 0 0; display:flex;flex-wrap:wrap;align-items:center;gap:5px 12px;
+    font-size:16px; color:var(--muted);
+  }
+  .pc-tags .dot{ opacity:.5; }
+  .pc-preview{
+    position:relative; flex:1 1 auto;
+    margin:64px calc(var(--cx) * -1) 0;   /* pleine largeur (bord à bord), gap 64px, fond transparent */
+    overflow:hidden; min-height:260px;
+  }
+  /* ---- slider marquee (défile seul + drag) — images bord à bord, tailles variées ---- */
+  .marquee{
+    position:absolute; inset:0; overflow:hidden;
+    cursor:grab; touch-action:pan-y;
+    background:transparent;
+    contain:layout paint;
+  }
+  .marquee.grabbing{ cursor:grabbing; }
+  .track{
+    position:absolute; top:0; bottom:0; left:0;
+    display:flex; gap:8px; width:max-content;
+    will-change:transform; backface-visibility:hidden;
+  }
+  .tile{
+    height:100%; flex:none; flex-shrink:0;
+    border-radius:24px; overflow:hidden; box-sizing:border-box;
+    border:2px solid #F4F4F5;
+  }
+  .tile img{ width:100%; height:100%; object-fit:cover; display:block; pointer-events:none; user-select:none; -webkit-user-select:none; -webkit-user-drag:none; }
+  .drag-hint{
+    position:absolute; left:0; top:0; z-index:6;
+    transform:translate(-50%,-135%);
+    background:var(--drag-bg,#18181B); color:var(--drag-fg,#fff);
+    padding:10px 16px; border-radius:999px;
+    font-weight:600; font-size:14px;
+    display:flex; align-items:center; gap:7px; white-space:nowrap;
+    pointer-events:none; opacity:0; transition:opacity .15s ease;
+  }
+  .marquee:hover .drag-hint, .marquee.grabbing .drag-hint{ opacity:1; }
+
+  /* ---------- Footer (dernier projet arrondi + footer inversé selon le thème) ---------- */
+  .projects .project-card:last-child{ border-radius:48px; }
+  .site-footer{
+    position:relative; z-index:0;
+    margin-top:-80px;   /* remonte sous la dernière carte → ses coins arrondis se voient sur le noir */
+    background:var(--ink); color:var(--bg);   /* inverse de la page → s'adapte clair/sombre */
+    min-height:74vh;
+    padding:calc(clamp(38px,5.5vh,56px) + 80px) clamp(20px,4vw,64px) clamp(22px,4vh,30px);
+    display:flex; flex-direction:column;
+    overflow:hidden;
+  }
+  .foot-row{ display:flex; align-items:flex-start; justify-content:space-between; gap:24px; }
+  .foot-connect{ margin:0; font-size:clamp(16px,1.5vw,19px); line-height:1.55; }
+  .foot-socials{ display:flex; gap:12px; flex:none; }
+  .foot-socials a{
+    width:56px;height:56px;border-radius:50%;
+    display:flex;align-items:center;justify-content:center;
+    background:color-mix(in srgb, var(--bg) 8%, transparent);
+    border:1px solid color-mix(in srgb, var(--bg) 16%, transparent);
+    color:var(--bg); text-decoration:none;
+    transition:background .18s ease, transform .18s ease;
+  }
+  .foot-socials a:hover{ background:color-mix(in srgb, var(--bg) 16%, transparent); transform:translateY(-2px); }
+  .foot-name{
+    margin:auto 0 clamp(12px,2vh,20px);
+    font-family:"Newsreader","PP Editorial New",Georgia,"Times New Roman",serif;
+    font-weight:200;
+    font-size:11vw;
+    line-height:0.9; letter-spacing:-0.01em;
+    white-space:nowrap;
+  }
+  .foot-bottom{
+    display:flex; justify-content:space-between; align-items:center; gap:16px;
+    font-size:14px; color:color-mix(in srgb, var(--bg) 58%, transparent);
+  }
+  @media (max-width:560px){
+    .foot-socials a{ width:46px;height:46px; }
+  }
+
+  /* ---------- Mobile : nav + héro alignés à gauche (comme l'original) ---------- */
+  @media (max-width:768px){
+    .nav-wrap{justify-content:flex-start;padding:0 18px}
+    .nav-links{padding:6px;gap:2px}
+    .nav-links a span{display:none}
+    .nav-links a{padding:11px}
+    .logo,.mail{width:52px;height:52px}
+    .content{
+      align-items:flex-start;
+      justify-content:flex-start;
+      text-align:left;
+      padding:104px 32px 0;
+    }
+    h1.title{max-width:14ch}
+    .subtitle{max-width:40ch}
+  }
+  @media (max-width:640px){
+    .project-card{ --cx:20px; border-radius:30px 30px 0 0; padding:36px var(--cx) 56px; }
+    .pc-head{ flex-direction:column; align-items:flex-start; gap:14px; }
+    .pc-preview{ margin-top:40px; }
+  }
+
+  @media (prefers-reduced-motion:reduce){
+    .mail:hover,.nav-links a:hover{transform:none}
+  }
+  /* apparition au défilement (même effet que les pages projet) */
+  html.js .rv{ opacity:0; transform:translateY(28px); }
+  html.js .rv.in{ opacity:1; transform:none; transition:opacity .7s ease var(--d,0s), transform .9s cubic-bezier(.2,.7,.2,1) var(--d,0s); }
+  @media (prefers-reduced-motion:reduce){ html.js .rv{ opacity:1; transform:none; transition:none; } }
+</style>
+<script>(function(){var r=document.documentElement;r.classList.add("js");try{var t=localStorage.getItem("theme");if(t==="dark"||t==="light")r.setAttribute("data-theme",t);}catch(e){}})();</script>
+</head>
+<body>
+
+<div class="reel">
+<div class="hero">
+  <!-- NAV -->
+  <div class="nav-wrap">
+    <nav class="nav" aria-label="Navigation principale">
+      <a class="logo" href="#" aria-label="Accueil">GL</a>
+      <div class="nav-links">
+        <a href="#work" aria-current="page"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M3 7a2 2 0 0 1 2-2h3.5l2 2H19a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/></svg><span>Projets</span></a>
+        <a href="about.html"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M8.5 14.5s1.3 1.5 3.5 1.5 3.5-1.5 3.5-1.5"/><path d="M9 9.5h.01M15 9.5h.01"/></svg><span>Me voilà</span></a>
+        <a href="cv.html"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M7 3h7l5 5v13a1 1 0 0 1-1 1H7a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1z"/><path d="M14 3v5h5M9 13h6M9 17h4"/></svg><span>CV</span></a>
+      </div>
+      <button class="mail tgl" id="themeToggle" type="button" aria-label="Basculer entre le mode clair et le mode sombre">
+      <svg class="moon" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#18181B" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z"/></svg>
+      <svg class="sun" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#18181B" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="4.2"/><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/></svg>
+    </button>
+    </nav>
+  </div>
+
+
+  <!-- FOREGROUND TEXT -->
+  <div class="content">
+    <span class="hello">Bonjour <img class="avatar" src="assets/img/moi/avatar.jpg" alt="Photo de Giovani" width="36" height="36"> Je suis Giovani</span>
+    <h1 class="title">Je conçois, <em> je coordonne,</em> je raconte.</h1>
+    <p class="subtitle">Des interfaces claires, <b>des projets qui avancent et des marques qui parlent juste,</b> du premier wireframe jusqu'à la mise en ligne.</p>
+  </div>
+
+  <!-- PHYSICS PILLS -->
+  <div id="stage" aria-hidden="true"></div>
+
+  <!-- BOTTOM DIVIDER -->
+  <div class="divider">
+    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 5v14M6 13l6 6 6-6"/></svg>
+    Des projets, des réalisations
+    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 5v14M6 13l6 6 6-6"/></svg>
+  </div>
+</div>
+
+<!-- ===================== PROJECTS (sticky stack) ===================== -->
+<section class="projects" id="work" aria-label="Projets">
+
+  <!-- Projet 1 -->
+  <article class="project-card">
+    <div class="pc-head">
+      <div class="pc-meta">
+        <span class="pc-icon" style="background:linear-gradient(135deg,#3b82f6,#2563eb)">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19V5M4 19h16M8 16v-4M12 16V8M16 16v-6"/></svg>
+        </span>
+        <span class="pc-label">Bell&Ross — Horlogerie de luxe — Site Web</span>
+      </div>
+      <a class="pc-cta" href="bellross.html">Voir le projet
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="m9 6 6 6-6 6"/></svg>
+      </a>
+    </div>
+    <h2 class="pc-title">Faire vivre chaque lancement de montre, de l'écran du site <br> à la vitrine des boutiques.</h2>
+    <p class="pc-tags"><span>Bannières</span><span class="dot">•</span><span>Video</span><span class="dot">•</span><span>Newsletters</span><span class="dot">•</span><span>Fiche Produit</span></p>
+
+    <div class="pc-preview">
+      <!-- Slider d'images (défile seul + drag) — remplace chaque .tile par une <img> -->
+      <div class="marquee" style="--drag-bg:#111114;--drag-fg:#ffffff">
+        <div class="track">
+          <span class="tile" style="aspect-ratio:960/1276"><img src="assets/img/bellross/bellross-montre.png" alt="Bellross — montre" loading="eager"></span>
+          <span class="tile" style="aspect-ratio:1920/1077"><img src="assets/img/bellross/bellross-web.png" alt="Bellross — site web" loading="eager"></span>
+          <span class="tile" style="aspect-ratio:960/1276"><img src="assets/img/bellross/bellross-mobile-urban.png" alt="Bellross — app mobile" loading="eager"></span>
+          <span class="tile" style="aspect-ratio:960/1276"><img src="assets/img/bellross/bellross-logo.png" alt="Bellross — logo" loading="eager"></span>
+          <span class="tile" style="aspect-ratio:1920/1077"><img src="assets/img/bellross/bellross-web-mobile.png" alt="Bellross — web mobile" loading="eager"></span>
+          <span class="tile" style="aspect-ratio:960/1276" aria-hidden="true"><img src="assets/img/bellross/bellross-montre.png" alt="" loading="eager"></span>
+          <span class="tile" style="aspect-ratio:1920/1077" aria-hidden="true"><img src="assets/img/bellross/bellross-web.png" alt="" loading="eager"></span>
+          <span class="tile" style="aspect-ratio:960/1276" aria-hidden="true"><img src="assets/img/bellross/bellross-mobile-urban.png" alt="" loading="eager"></span>
+          <span class="tile" style="aspect-ratio:960/1276" aria-hidden="true"><img src="assets/img/bellross/bellross-logo.png" alt="" loading="eager"></span>
+          <span class="tile" style="aspect-ratio:1920/1077" aria-hidden="true"><img src="assets/img/bellross/bellross-web-mobile.png" alt="" loading="eager"></span>
+        </div>
+        <div class="drag-hint">Glisser ✋</div>
+      </div>
+    </div>
+  </article>
+
+  <!-- Projet 2 -->
+  <article class="project-card">
+    <div class="pc-head">
+      <div class="pc-meta">
+        <span class="pc-icon" style="background:linear-gradient(135deg,#a78bfa,#7c3aed);box-shadow:0 6px 16px rgba(124,58,237,0.28)">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="3" width="7" height="10" rx="1.5"/><rect x="3" y="14" width="7" height="7" rx="1.5"/><rect x="14" y="17" width="7" height="4" rx="1.5"/></svg>
+        </span>
+        <span class="pc-label">Bell & Ross — Extranet SAV · 2024-25</span>
+      </div>
+      <a class="pc-cta" href="extranet-sav.html">Voir le projet
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="m9 6 6 6-6 6"/></svg>
+      </a>
+    </div>
+    <h2 class="pc-title">Redonner de la lisibilité à l'outil qui suit chaque montre, <br>de l'atelier au client.</h2>
+    <p class="pc-tags"><span>Parcours non linéaire</span><span class="dot">•</span><span>8 étapes, 4 obligatoires</span><span class="dot">•</span><span>70+ libellés revus</span><span class="dot">•</span><span>Découpage en V1 livrable</span></p>
+
+    <div class="pc-preview">
+      <!-- Slider d'images (défile seul + drag) -->
+      <div class="marquee" style="--proj-soft:#F2ECFF;--drag-bg:#7C3AED;--drag-fg:#ffffff">
+        <div class="track">
+          <span class="tile" style="aspect-ratio:1920/1077"><img src="assets/img/sav/savapp.png" alt="Extranet SAV — tableau de bord" loading="eager"></span>
+          <span class="tile" style="aspect-ratio:960/1276"><img src="assets/img/sav/section-dispo.png" alt="Extranet SAV — commande de pièces" loading="eager"></span>
+          <span class="tile" style="aspect-ratio:960/1276"><img src="assets/img/sav/formulaire-sav.png" alt="Extranet SAV — détail fiche SAV" loading="eager"></span>
+          <span class="tile" style="aspect-ratio:960/1276"><img src="assets/img/sav/sav.png" alt="Extranet SAV" loading="eager"></span>
+          <span class="tile" style="aspect-ratio:960/1276"><img src="assets/img/sav/fermoir.png" alt="Bell & Ross — fermoir" loading="eager"></span>
+          <span class="tile" style="aspect-ratio:1920/1077" aria-hidden="true"><img src="assets/img/sav/savapp.png" alt="" loading="eager"></span>
+          <span class="tile" style="aspect-ratio:960/1276" aria-hidden="true"><img src="assets/img/sav/section-dispo.png" alt="" loading="eager"></span>
+          <span class="tile" style="aspect-ratio:960/1276" aria-hidden="true"><img src="assets/img/sav/formulaire-sav.png" alt="" loading="eager"></span>
+          <span class="tile" style="aspect-ratio:960/1276" aria-hidden="true"><img src="assets/img/sav/sav.png" alt="" loading="eager"></span>
+          <span class="tile" style="aspect-ratio:960/1276" aria-hidden="true"><img src="assets/img/sav/fermoir.png" alt="" loading="eager"></span>
+        </div>
+        <div class="drag-hint">Glisser ✋</div>
+      </div>
+    </div>
+  </article>
+
+  <!-- Projet 3 -->
+  <article class="project-card">
+    <div class="pc-head">
+      <div class="pc-meta">
+        <span class="pc-icon" style="background:linear-gradient(135deg,#34d399,#059669);box-shadow:0 6px 16px rgba(5,150,105,0.28)">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="3.5"/></svg>
+        </span>
+        <span class="pc-label">Connect Station — 2025 · Projet d'école</span>
+      </div>
+      <a class="pc-cta" href="connect-station.html">Voir le projet
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="m9 6 6 6-6 6"/></svg>
+      </a>
+    </div>
+    <h2 class="pc-title">Transformer l'attente à l'arrêt de bus, source de stress, <br>en moment où l'on se sent guidé.</h2>
+    <p class="pc-tags"><span>Design émotionnel</span><span class="dot">•</span><span>10 entretiens</span><span class="dot">•</span><span>Sprint de 5 jours</span><span class="dot">•</span><span>Maquette physique + prototype tactile</span></p>
+
+    <div class="pc-preview">
+      <!-- Slider d'images (défile seul + drag) -->
+      <div class="marquee" style="--proj-soft:#FFF6DE;--drag-bg:#F5B300;--drag-fg:#18181B">
+        <div class="track">
+          <span class="tile" style="aspect-ratio:960/1276"><img src="assets/img/bus/schema.png" alt="Connect Station — les trois niveaux du design émotionnel" loading="eager"></span>
+          <span class="tile" style="aspect-ratio:960/1276"><img src="assets/img/bus/trajet.png" alt="Connect Station — trajets" loading="eager"></span>
+          <span class="tile" style="aspect-ratio:960/1276"><img src="assets/img/bus/bus.png" alt="Connect Station — pictogramme bus" loading="eager"></span>
+          <span class="tile" style="aspect-ratio:960/1276"><img src="assets/img/bus/carte-map.png" alt="Connect Station — itinéraire" loading="eager"></span>
+          <span class="tile" style="aspect-ratio:960/1276"><img src="assets/img/bus/cartebus.png" alt="Plan des bus" loading="eager"></span>
+          <span class="tile" style="aspect-ratio:960/1276" aria-hidden="true"><img src="assets/img/bus/schema.png" alt="" loading="eager"></span>
+          <span class="tile" style="aspect-ratio:960/1276" aria-hidden="true"><img src="assets/img/bus/trajet.png" alt="" loading="eager"></span>
+          <span class="tile" style="aspect-ratio:960/1276" aria-hidden="true"><img src="assets/img/bus/bus.png" alt="" loading="eager"></span>
+          <span class="tile" style="aspect-ratio:960/1276" aria-hidden="true"><img src="assets/img/bus/carte-map.png" alt="" loading="eager"></span>
+          <span class="tile" style="aspect-ratio:960/1276" aria-hidden="true"><img src="assets/img/bus/cartebus.png" alt="" loading="eager"></span>
+        </div>
+        <div class="drag-hint">Glisser ✋</div>
+      </div>
+    </div>
+  </article>
+
+</section>
+</div><!-- /.reel -->
+
+<!-- ===================== FOOTER ===================== -->
+<footer class="site-footer" id="contact">
+  <div class="foot-row">
+    <p class="foot-connect">On en parle ?<br>Je suis toujours partant pour échanger.</p>
+    <div class="foot-socials">
+      <a href="mailto:giovanilabat971@gmail.com" aria-label="M'écrire un email"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="5" width="18" height="14" rx="2.5"/><path d="m4 7 8 6 8-6"/></svg></a>
+      <a href="cv.html" aria-label="CV"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M7 3h8l4 4v14a1 1 0 0 1-1 1H8a1 1 0 0 1-1-1z"/><path d="M15 3v4h4M10 12h4M10 16h4"/></svg></a>
+      <a href="https://www.linkedin.com/in/giovani-labat" target="_blank" rel="noopener" aria-label="LinkedIn"><svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M4.98 3.5A2.5 2.5 0 1 0 5 8.5 2.5 2.5 0 0 0 4.98 3.5zM3.2 9.5h3.6V21H3.2zM9.5 9.5h3.45v1.57h.05c.48-.9 1.66-1.85 3.42-1.85 3.66 0 4.33 2.4 4.33 5.53V21h-3.6v-5.4c0-1.29-.02-2.95-1.8-2.95-1.8 0-2.07 1.4-2.07 2.85V21H9.5z"/></svg></a>
+    </div>
+  </div>
+  <div class="foot-name">Giovani Labat</div>
+  <div class="foot-bottom">
+    <span>© 2026 Giovani Labat</span>
+    <span>Conçu et codé avec soin</span>
+  </div>
+</footer>
+
+<script>
+/* slider marquee des projets : défile seul + drag pour scruber + label "Drag" qui suit le curseur */
+(function(){
+  var reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  document.querySelectorAll('.marquee').forEach(function(m){
+    var track=m.querySelector('.track');
+    var hint=m.querySelector('.drag-hint');
+    if(!track) return;
+    var x=0, speed=reduce?0:0.45, half=0, dragging=false, startX=0, startOff=0;
+    function measure(){ var mid=track.children[track.children.length/2|0]; half = mid?mid.offsetLeft:track.scrollWidth/2; }
+    function wrap(){ if(half>0){ while(x<=-half) x+=half; while(x>0) x-=half; } }
+    measure(); setTimeout(measure,400); window.addEventListener('resize',measure);
+    function frame(){ if(!dragging){ x-=speed; wrap(); track.style.transform='translateX('+x+'px)'; } requestAnimationFrame(frame); }
+    requestAnimationFrame(frame);
+    m.addEventListener('pointermove', function(e){
+      var r=m.getBoundingClientRect();
+      if(hint){ hint.style.left=(e.clientX-r.left)+'px'; hint.style.top=(e.clientY-r.top)+'px'; }
+      if(dragging){ x=startOff+(e.clientX-startX); wrap(); track.style.transform='translateX('+x+'px)'; }
+    });
+    m.addEventListener('pointerdown', function(e){ dragging=true; startX=e.clientX; startOff=x; m.classList.add('grabbing'); try{m.setPointerCapture(e.pointerId);}catch(_){}} );
+    window.addEventListener('pointerup', function(){ dragging=false; m.classList.remove('grabbing'); });
+  });
+})();
+</script>
+<script src="assets/js/site.js" defer></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/matter-js/0.19.0/matter.min.js"></script>
+<script>
+(function(){
+  var reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  var M = window.Matter;
+  if(!M){ return; }
+
+  var stage = document.getElementById('stage');
+
+  // ---- icon set (simple stroke icons) ----
+  function icon(name, size){
+    size = size || 16;
+    var p = {
+      globe:'<circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3c2.6 2.4 2.6 15.6 0 18M12 3c-2.6 2.4-2.6 15.6 0 18"/>',
+      shuffle:'<path d="M16 4h4v4M4 20 20 4M4 4l6 6M14 14l6 6M16 20h4v-4"/>',
+      smile:'<circle cx="12" cy="12" r="9"/><path d="M8.5 14.5s1.3 1.5 3.5 1.5 3.5-1.5 3.5-1.5"/><path d="M9 9.5h.01M15 9.5h.01"/>',
+      roller:'<rect x="4" y="4" width="12" height="6" rx="1.5"/><path d="M16 7h3a1 1 0 0 1 1 1v3a1 1 0 0 1-1 1h-6a1 1 0 0 0-1 1v2"/><rect x="10" y="15" width="4" height="6" rx="1"/>',
+      pencil:'<path d="M4 20h4L20 8l-4-4L4 16z"/><path d="M14 6l4 4"/>',
+      frame:'<path d="M6 3v18M18 3v18M3 6h18M3 18h18"/>',
+      file:'<path d="M7 3h8l4 4v14H7z"/><path d="M15 3v4h4"/>',
+      move:'<path d="M12 3v18M3 12h18M9 6l3-3 3 3M9 18l3 3 3-3M6 9l-3 3 3 3M18 9l3 3-3 3"/>',
+      sparkle:'<path d="M12 3c.6 4.2 2.2 5.8 6.4 6.4-4.2.6-5.8 2.2-6.4 6.4-.6-4.2-2.2-5.8-6.4-6.4C9.8 8.8 11.4 7.2 12 3z"/>',
+      star:'<path d="m12 3 2.5 5.6L20.5 9l-4.5 4 1.3 6L12 16.9 6.7 19l1.3-6-4.5-4 6-.4z"/>',
+      clock:'<circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/>',
+      phone:'<path d="M5 4h4l1.5 4-2 1.5a11 11 0 0 0 5 5l1.5-2 4 1.5v4a2 2 0 0 1-2 2A16 16 0 0 1 3 6a2 2 0 0 1 2-2z"/>',
+      bulb:'<path d="M9 18h6M10 21h4M12 3a6 6 0 0 1 4 10.5c-.7.7-1 1.5-1 2.5H9c0-1-.3-1.8-1-2.5A6 6 0 0 1 12 3z"/>'
+    }[name] || '';
+    return '<svg width="'+size+'" height="'+size+'" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">'+p+'</svg>';
+  }
+
+  // ---- pill definitions ----
+  var LABELS = [
+    {t:'PENSER EN SYSTÈMES', c:'--p-pink',   i:'globe'},
+    {t:'PROTOTYPER',       c:'--p-gray',   i:'shuffle'},
+    {t:'AMÉLIORER L\'UX',  c:'--p-yellow', i:'smile'},
+    {t:'DONNER DU PEPS',   c:'--p-orange', i:'roller'},
+    {t:'TESTER',           c:'--p-purple', i:'pencil'},
+    {t:'REFORMULER LE PROBLÈME',c:'--p-green', i:'frame'},
+    {t:'ARRONDIR LES ANGLES', c:'--p-lime',   i:'file'},
+    {t:'DÉPLACER DES RECTANGLES',c:'--p-blue',   i:'move'}
+  ];
+  var CIRCLES = [
+    {c:'--p-white',  i:'sparkle'},
+    {c:'--p-yellow', i:'star'},
+    {c:'--p-blue',   i:'clock'},
+    {c:'--p-orange', i:'phone'},
+    {c:'--p-purple', i:'bulb'}
+  ];
+
+  var cs = getComputedStyle(document.documentElement);
+  function col(v){ return cs.getPropertyValue(v).trim(); }
+
+  var W = window.innerWidth, H = window.innerHeight;
+  var PS = W < 560 ? 0.72 : W < 900 ? 0.86 : 1;   // échelle des pilules selon la largeur d'écran
+
+  // ---- engine ----
+  var engine = M.Engine.create();
+  engine.gravity.y = 1;
+  var world = engine.world;
+
+  var bodies = [];   // {body, el}
+  function makeWalls(){
+    var t = 400;
+    return [
+      M.Bodies.rectangle(W/2, H+t/2 - 2, W+t*2, t, {isStatic:true}),        // floor
+      M.Bodies.rectangle(-t/2 + 2, H/2, t, H*3, {isStatic:true}),           // left
+      M.Bodies.rectangle(W+t/2 - 2, H/2, t, H*3, {isStatic:true}),          // right
+      M.Bodies.rectangle(W/2, -H - t, W+t*2, t, {isStatic:true})            // high ceiling
+    ];
+  }
+  var walls = makeWalls();
+  M.World.add(world, walls);
+
+  // ---- build a capsule pill ----
+  function addPill(def){
+    var el = document.createElement('div');
+    el.className = 'pill';
+    el.style.background = col(def.c);
+    el.style.borderRadius = '999px';
+    // proportions relevées sur xhulia.com : hauteur 58, marges 20/30, texte 18px, icône 18 (réduites sur petit écran)
+    el.style.padding = Math.round(20*PS)+'px '+Math.round(30*PS)+'px';
+    el.style.fontSize = Math.round(18*PS)+'px'; el.style.lineHeight = Math.round(18*PS)+'px';
+    el.innerHTML = '<span>'+def.t+'</span>' + icon(def.i,Math.round(18*PS));
+    if(def.c === '--p-gray' || def.c === '--p-white'){
+      el.style.boxShadow = '0 1px 2px rgba(24,24,27,0.10), 0 8px 20px rgba(24,24,27,0.07)';
+    }
+    stage.appendChild(el);
+    var r = el.getBoundingClientRect();
+    var w = Math.round(r.width), h = Math.round(r.height);
+    el.style.width = w+'px'; el.style.height = h+'px';
+    el.style.padding = '0'; el.style.gap = Math.round(10*PS)+'px';
+
+    var x = 80 + Math.random()*(W-160);
+    var y = -100 - Math.random()*500;
+    var body = M.Bodies.rectangle(x, y, w, h, {
+      chamfer:{ radius: h/2 },
+      restitution:0.28, friction:0.35, frictionAir:0.012, density:0.0016,
+      angle:(Math.random()-0.5)*0.5
+    });
+    M.World.add(world, body);
+    bodies.push({body:body, el:el, w:w, h:h});
+  }
+
+  // ---- build a circle pastille ----
+  function addCircle(def){
+    var d = Math.round(58*PS);
+    var el = document.createElement('div');
+    el.className = 'pill circle';
+    el.style.background = col(def.c);
+    el.style.width = d+'px'; el.style.height = d+'px';
+    el.style.borderRadius = '50%';
+    if(def.c === '--p-white'){
+      el.style.boxShadow = '0 1px 2px rgba(24,24,27,0.10), 0 8px 20px rgba(24,24,27,0.07)';
+    }
+    el.innerHTML = icon(def.i,Math.round(22*PS));
+    stage.appendChild(el);
+    var x = 80 + Math.random()*(W-160);
+    var y = -100 - Math.random()*500;
+    var body = M.Bodies.circle(x, y, d/2, {
+      restitution:0.4, friction:0.3, frictionAir:0.01, density:0.0016
+    });
+    M.World.add(world, body);
+    bodies.push({body:body, el:el, w:d, h:d});
+  }
+
+  // stagger the drop so they fall in one after another
+  var queue = [];
+  LABELS.forEach(function(d){ queue.push(['p',d]); });
+  CIRCLES.forEach(function(d){ queue.push(['c',d]); });
+  // interleave
+  queue.sort(function(){ return Math.random()-0.5; });
+
+  if(reduce){
+    // place everything, then step the engine a lot to pre-settle (little visible motion)
+    queue.forEach(function(q){ q[0]==='p'?addPill(q[1]):addCircle(q[1]); });
+  }else{
+    var qi = 0;
+    (function drop(){
+      if(qi>=queue.length) return;
+      var q = queue[qi++];
+      q[0]==='p'?addPill(q[1]):addCircle(q[1]);
+      setTimeout(drop, 110);
+    })();
+  }
+
+  // ---- mouse / touch drag ----
+  var mouse = M.Mouse.create(stage);
+  // laisse le scroll (molette + trackpad + tactile) passer à la page
+  mouse.element.removeEventListener('mousewheel', mouse.mousewheel); /* legacy — c'est celui-ci qui bloquait le scroll souris */
+  mouse.element.removeEventListener('wheel', mouse.mousewheel);
+  mouse.element.removeEventListener('DOMMouseScroll', mouse.mousewheel);
+  mouse.element.removeEventListener('touchmove', mouse.mousemove);
+  mouse.element.removeEventListener('touchstart', mouse.mousedown);
+  mouse.element.removeEventListener('touchend', mouse.mouseup);
+  var mc = M.MouseConstraint.create(engine, {
+    mouse: mouse,
+    constraint:{ stiffness:0.2, render:{visible:false} }
+  });
+  M.World.add(world, mc);
+  M.Events.on(mc,'startdrag',function(e){
+    var f = bodies.find(function(b){return b.body===e.body;});
+    if(f) f.el.classList.add('dragging');
+  });
+  M.Events.on(mc,'enddrag',function(e){
+    bodies.forEach(function(b){ b.el.classList.remove('dragging'); });
+  });
+
+  // ---- render loop: map bodies -> DOM transforms ----
+  function render(){
+    for(var i=0;i<bodies.length;i++){
+      var b = bodies[i];
+      var p = b.body.position, a = b.body.angle;
+      b.el.style.transform =
+        'translate('+(p.x - b.w/2)+'px,'+(p.y - b.h/2)+'px) rotate('+a+'rad)';
+    }
+  }
+  M.Events.on(engine,'afterUpdate', render);
+
+  var runner = M.Runner.create();
+  M.Runner.run(runner, engine);
+
+  if(reduce){
+    for(var k=0;k<240;k++){ M.Engine.update(engine, 1000/60); }
+    render();
+  }
+
+  // ---- resize: rebuild walls ----
+  var rt;
+  window.addEventListener('resize', function(){
+    clearTimeout(rt);
+    rt = setTimeout(function(){
+      W = window.innerWidth; H = window.innerHeight;
+      M.World.remove(world, walls);
+      walls = makeWalls();
+      M.World.add(world, walls);
+      // nudge bodies back inside
+      bodies.forEach(function(b){
+        if(b.body.position.x < 0 || b.body.position.x > W){
+          M.Body.setPosition(b.body, {x:Math.min(Math.max(b.body.position.x,60),W-60), y:b.body.position.y});
+        }
+      });
+    }, 180);
+  });
+})();
+</script>
+</body>
+</html>
