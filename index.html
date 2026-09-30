@@ -16,7 +16,7 @@
 <title>Giovani Labat — Designer UX/UI</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600;700&family=Geist+Mono:wght@500;600&family=Newsreader:ital,opsz,wght@0,6..72,200;0,6..72,300;0,6..72,400;1,6..72,200;1,6..72,300&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600;700&family=Geist+Mono:wght@400;500;600&family=Newsreader:ital,opsz,wght@0,6..72,200;0,6..72,300;0,6..72,400;1,6..72,200;1,6..72,300&display=swap">
 <style>
   :root{
     color-scheme:light dark;
@@ -113,9 +113,10 @@
     gap:10px;
     font-family:"Geist Mono","SFMono-Regular",ui-monospace,monospace;
     font-weight:400;
-    font-size:18px;
-    line-height:18px;
-    letter-spacing:0;
+    font-size:15px;
+    line-height:15px;
+    letter-spacing:0.02em;
+    -webkit-font-smoothing:antialiased;
     text-transform:uppercase;
     color:var(--pill-ink);
     white-space:nowrap;
@@ -688,9 +689,9 @@
     el.style.background = col(def.c);
     el.style.borderRadius = '999px';
     // proportions relevées sur xhulia.com : hauteur 58, marges 20/30, texte 18px, icône 18 (réduites sur petit écran)
-    el.style.padding = Math.round(20*PS)+'px '+Math.round(30*PS)+'px';
-    el.style.fontSize = Math.round(18*PS)+'px'; el.style.lineHeight = Math.round(18*PS)+'px';
-    el.innerHTML = '<span>'+def.t+'</span>' + icon(def.i,Math.round(18*PS));
+    el.style.padding = Math.round(19*PS)+'px '+Math.round(26*PS)+'px';
+    el.style.fontSize = Math.round(15*PS)+'px'; el.style.lineHeight = Math.round(15*PS)+'px';
+    el.innerHTML = '<span>'+def.t+'</span>' + icon(def.i,Math.round(16*PS));
     if(def.c === '--p-gray' || def.c === '--p-white'){
       el.style.boxShadow = '0 1px 2px rgba(24,24,27,0.10), 0 8px 20px rgba(24,24,27,0.07)';
     }
